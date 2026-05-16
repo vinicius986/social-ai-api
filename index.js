@@ -375,6 +375,103 @@ app.post('/copy/sales', async (req, res) => {
         });
     }
 });
+// PRODUCT DESCRIPTION
+
+app.post('/product/description', async (req, res) => {
+    try {
+        const { product, tone = "persuasivo" } = req.body;
+
+        const response = await client.chat.completions.create({
+            model: 'gpt-4.1-mini',
+            messages: [
+                {
+                    role: 'user',
+                    content: `Crie uma descrição de produto profissional para: ${product}. Tom: ${tone}. Escreva em português do Brasil.`
+                }
+            ]
+        });
+
+        res.json({
+            success: true,
+            product,
+            tone,
+            description: response.choices[0].message.content,
+            powered_by: "Social AI API",
+            developer: "Vinicius España"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// EMAIL MARKETING
+
+app.post('/email/marketing', async (req, res) => {
+    try {
+        const { product, audience = "clientes em potencial" } = req.body;
+
+        const response = await client.chat.completions.create({
+            model: 'gpt-4.1-mini',
+            messages: [
+                {
+                    role: 'user',
+                    content: `Crie um email marketing persuasivo para vender ${product} para ${audience}. Inclua assunto, corpo do email e CTA.`
+                }
+            ]
+        });
+
+        res.json({
+            success: true,
+            product,
+            audience,
+            email: response.choices[0].message.content,
+            powered_by: "Social AI API",
+            developer: "Vinicius España"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// COPY HEADLINE
+
+app.post('/copy/headline', async (req, res) => {
+    try {
+        const { product, quantity = 10 } = req.body;
+
+        const response = await client.chat.completions.create({
+            model: 'gpt-4.1-mini',
+            messages: [
+                {
+                    role: 'user',
+                    content: `Crie ${quantity} headlines chamativas e persuasivas para vender: ${product}.`
+                }
+            ]
+        });
+
+        res.json({
+            success: true,
+            product,
+            headlines: response.choices[0].message.content,
+            powered_by: "Social AI API",
+            developer: "Vinicius España"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
 // INICIAR SERVIDOR
 
 app.listen(PORT, () => {
