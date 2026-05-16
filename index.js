@@ -15,6 +15,27 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
+// API KEY
+
+const API_KEY = process.env.API_KEY;
+
+function auth(req, res, next) {
+
+    const key = req.headers['x-api-key'];
+
+    if (!key || key !== API_KEY) {
+
+        return res.status(401).json({
+            success: false,
+            error: 'Invalid API Key'
+        });
+
+    }
+
+    next();
+
+}
+
 // HOME
 
 app.get('/', (req, res) => {
@@ -25,6 +46,10 @@ app.get('/', (req, res) => {
     });
 
 });
+
+// PROTEGER ROTAS
+
+app.use(auth);
 
 // GERAR LEGENDA
 
@@ -45,8 +70,7 @@ app.post('/instagram/caption', async (req, res) => {
                 },
                 {
                     role: 'user',
-                    content:
-                    `Crie uma legenda criativa sobre: ${topic}`
+                    content: `Crie uma legenda criativa sobre: ${topic}`
                 }
             ]
 
@@ -55,9 +79,9 @@ app.post('/instagram/caption', async (req, res) => {
         res.json({
 
             success: true,
-            caption:
-            response.choices[0].message.content
-
+caption: response.choices[0].message.content,
+powered_by: "Social AI API",
+developer: "Vinicius España"
         });
 
     } catch (error) {
@@ -73,7 +97,6 @@ app.post('/instagram/caption', async (req, res) => {
 
 });
 
-// INICIAR SERVIDOR
 // GERAR HASHTAGS
 
 app.post('/instagram/hashtags', async (req, res) => {
@@ -89,8 +112,7 @@ app.post('/instagram/hashtags', async (req, res) => {
             messages: [
                 {
                     role: 'user',
-                    content:
-                    `Crie 20 hashtags para: ${topic}`
+                    content: `Crie 20 hashtags para: ${topic}`
                 }
             ]
 
@@ -99,8 +121,7 @@ app.post('/instagram/hashtags', async (req, res) => {
         res.json({
 
             success: true,
-            hashtags:
-            response.choices[0].message.content
+            hashtags: response.choices[0].message.content
 
         });
 
@@ -117,7 +138,7 @@ app.post('/instagram/hashtags', async (req, res) => {
 
 });
 
-// GERAR BIO INSTAGRAM
+// GERAR BIO
 
 app.post('/instagram/bio', async (req, res) => {
 
@@ -132,8 +153,7 @@ app.post('/instagram/bio', async (req, res) => {
             messages: [
                 {
                     role: 'user',
-                    content:
-                    `Crie uma bio profissional de Instagram para: ${niche}`
+                    content: `Crie uma bio profissional de Instagram para: ${niche}`
                 }
             ]
 
@@ -142,8 +162,7 @@ app.post('/instagram/bio', async (req, res) => {
         res.json({
 
             success: true,
-            bio:
-            response.choices[0].message.content
+            bio: response.choices[0].message.content
 
         });
 
@@ -175,8 +194,7 @@ app.post('/tiktok/hooks', async (req, res) => {
             messages: [
                 {
                     role: 'user',
-                    content:
-                    `Crie 5 hooks virais de TikTok sobre: ${topic}`
+                    content: `Crie 5 hooks virais de TikTok sobre: ${topic}`
                 }
             ]
 
@@ -185,8 +203,7 @@ app.post('/tiktok/hooks', async (req, res) => {
         res.json({
 
             success: true,
-            hooks:
-            response.choices[0].message.content
+            hooks: response.choices[0].message.content
 
         });
 
@@ -202,8 +219,11 @@ app.post('/tiktok/hooks', async (req, res) => {
     }
 
 });
+
+// INICIAR SERVIDOR
+
 app.listen(PORT, () => {
 
     console.log(`Servidor rodando na porta ${PORT}`);
 
-});
+})
