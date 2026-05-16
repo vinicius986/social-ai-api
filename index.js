@@ -219,7 +219,129 @@ app.post('/tiktok/hooks', async (req, res) => {
     }
 
 });
+// YOUTUBE TITLE
 
+app.post('/youtube/title', async (req, res) => {
+    try {
+        const { topic } = req.body;
+
+        const response = await client.chat.completions.create({
+            model: 'gpt-4.1-mini',
+            messages: [
+                {
+                    role: 'user',
+                    content: `Crie 10 títulos chamativos para YouTube sobre: ${topic}`
+                }
+            ]
+        });
+
+        res.json({
+            success: true,
+            titles: response.choices[0].message.content,
+            powered_by: "Social AI API",
+            developer: "Vinicius España"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// YOUTUBE DESCRIPTION
+
+app.post('/youtube/description', async (req, res) => {
+    try {
+        const { topic } = req.body;
+
+        const response = await client.chat.completions.create({
+            model: 'gpt-4.1-mini',
+            messages: [
+                {
+                    role: 'user',
+                    content: `Crie uma descrição otimizada para YouTube sobre: ${topic}`
+                }
+            ]
+        });
+
+        res.json({
+            success: true,
+            description: response.choices[0].message.content,
+            powered_by: "Social AI API",
+            developer: "Vinicius España"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// COPY CTA
+
+app.post('/copy/cta', async (req, res) => {
+    try {
+        const { product } = req.body;
+
+        const response = await client.chat.completions.create({
+            model: 'gpt-4.1-mini',
+            messages: [
+                {
+                    role: 'user',
+                    content: `Crie 10 chamadas para ação para vender: ${product}`
+                }
+            ]
+        });
+
+        res.json({
+            success: true,
+            ctas: response.choices[0].message.content,
+            powered_by: "Social AI API",
+            developer: "Vinicius España"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// COPY SALES
+
+app.post('/copy/sales', async (req, res) => {
+    try {
+        const { product } = req.body;
+
+        const response = await client.chat.completions.create({
+            model: 'gpt-4.1-mini',
+            messages: [
+                {
+                    role: 'user',
+                    content: `Crie uma copy curta e persuasiva para vender: ${product}`
+                }
+            ]
+        });
+
+        res.json({
+            success: true,
+            copy: response.choices[0].message.content,
+            powered_by: "Social AI API",
+            developer: "Vinicius España"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
 // INICIAR SERVIDOR
 
 app.listen(PORT, () => {
