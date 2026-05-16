@@ -57,7 +57,7 @@ app.post('/instagram/caption', async (req, res) => {
 
     try {
 
-        const { topic } = req.body;
+        const { topic, tone = "motivacional", quantity = 3 } = req.body;
 
         const response = await client.chat.completions.create({
 
@@ -66,31 +66,64 @@ app.post('/instagram/caption', async (req, res) => {
             messages: [
                 {
                     role: 'system',
-                    content: 'Você é especialista em Instagram.'
+                    content: 'Você é um especialista em marketing, Instagram e copywriting para redes sociais.'
                 },
                 {
                     role: 'user',
-                    content: `Crie uma legenda criativa sobre: ${topic}`
+                    content: `
+Crie ${quantity} legendas para Instagram sobre: ${topic}.
+
+Tom desejado: ${tone}.
+
+Regras:
+- Escreva em português do Brasil.
+- Cada legenda deve ser curta, criativa e pronta para postar.
+- Inclua emojis quando fizer sentido.
+- Inclua uma chamada para ação no final.
+- Não escreva explicações.
+- Retorne apenas em formato JSON válido.
+
+Formato obrigatório:
+{
+  "captions": [
+    "legenda 1",
+    "legenda 2",
+    "legenda 3"
+  ]
+}
+`
                 }
             ]
 
         });
 
-        res.json({
+        const content = response.choices[0].message.content;
 
+        let parsed;
+
+        try {
+            parsed = JSON.parse(content);
+        } catch {
+            parsed = {
+                captions: [content]
+            };
+        }
+
+        res.json({
             success: true,
-caption: response.choices[0].message.content,
-powered_by: "Social AI API",
-developer: "Vinicius España"
+            topic,
+            tone,
+            quantity,
+            captions: parsed.captions,
+            powered_by: "Social AI API",
+            developer: "Vinicius España"
         });
 
     } catch (error) {
 
         res.status(500).json({
-
             success: false,
             error: error.message
-
         });
 
     }
